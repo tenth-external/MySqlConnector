@@ -1,17 +1,26 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 
 namespace MySqlConnector.Core;
 
 internal sealed class DbTypeMapping
 {
-	public DbTypeMapping(Type clrType, DbType[] dbTypes, Func<object, object>? convert = null)
+	public DbTypeMapping(
+#if NET5_0_OR_GREATER
+		[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties | DynamicallyAccessedMemberTypes.PublicFields)]
+#endif
+		Type clrType, DbType[] dbTypes, Func<object, object>? convert = null)
 	{
 		ClrType = clrType;
 		DbTypes = dbTypes;
 		m_convert = convert;
 	}
 
+#if NET5_0_OR_GREATER
+	[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties | DynamicallyAccessedMemberTypes.PublicFields)]
+#endif
 	public Type ClrType { get; }
+
 	public DbType[] DbTypes { get; }
 
 	public object DoConversion(object obj)

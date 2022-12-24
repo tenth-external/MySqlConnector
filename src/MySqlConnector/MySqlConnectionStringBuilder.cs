@@ -876,6 +876,9 @@ public sealed class MySqlConnectionStringBuilder : DbConnectionStringBuilder
 	/// Fills in <paramref name="propertyDescriptors"/> with information about the available properties on this object.
 	/// </summary>
 	/// <param name="propertyDescriptors">The collection of <see cref="PropertyDescriptor"/> objects to populate.</param>
+#if NET5_0_OR_GREATER
+	[RequiresUnreferencedCode("PropertyDescriptor's PropertyType cannot be statically discovered.")]
+#endif
 	protected override void GetProperties(Hashtable propertyDescriptors)
 	{
 		base.GetProperties(propertyDescriptors);

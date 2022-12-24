@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using MySqlConnector.Core;
 using MySqlConnector.Logging;
@@ -251,6 +252,10 @@ public sealed class MySqlDataReader : DbDataReader, IDbColumnSchemaGenerator
 	public override string GetDataTypeName(int ordinal) => GetResultSet().GetDataTypeName(ordinal);
 
 	public Type GetFieldType(string name) => GetFieldType(GetOrdinal(name));
+
+#if NET5_0_OR_GREATER
+	[return: DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties | DynamicallyAccessedMemberTypes.PublicFields)]
+#endif
 	public override Type GetFieldType(int ordinal) => GetResultSet().GetFieldType(ordinal);
 
 	public override object GetValue(int ordinal) => GetResultSet().GetCurrentRow().GetValue(ordinal);
@@ -506,7 +511,10 @@ public sealed class MySqlDataReader : DbDataReader, IDbColumnSchemaGenerator
 		var size = new DataColumn(SchemaTableColumn.ColumnSize, typeof(int));
 		var precision = new DataColumn(SchemaTableColumn.NumericPrecision, typeof(int));
 		var scale = new DataColumn(SchemaTableColumn.NumericScale, typeof(int));
-		var dataType = new DataColumn(SchemaTableColumn.DataType, typeof(System.Type));
+//// TODO: Figure this out
+#pragma warning disable IL2111 // Method with parameters or return value with `DynamicallyAccessedMembersAttribute` is accessed via reflection. Trimmer can't guarantee availability of the requirements of the method.
+		var dataType = new DataColumn(SchemaTableColumn.DataType, typeof(Type));
+#pragma warning restore IL2111 // Method with parameters or return value with `DynamicallyAccessedMembersAttribute` is accessed via reflection. Trimmer can't guarantee availability of the requirements of the method.
 		var providerType = new DataColumn(SchemaTableColumn.ProviderType, typeof(int));
 		var isLong = new DataColumn(SchemaTableColumn.IsLong, typeof(bool));
 		var allowDBNull = new DataColumn(SchemaTableColumn.AllowDBNull, typeof(bool));
