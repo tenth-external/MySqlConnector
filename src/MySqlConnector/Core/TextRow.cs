@@ -1,4 +1,5 @@
 using System.Buffers.Text;
+using System.Runtime.InteropServices;
 using System.Text;
 using MySqlConnector.Protocol;
 using MySqlConnector.Protocol.Payloads;
@@ -130,6 +131,14 @@ internal sealed class TextRow : Row
 			throw new NotImplementedException($"Reading {columnDefinition.ColumnType} not implemented");
 		}
 	}
+
+	protected override sbyte XGetSByte(ReadOnlySpan<byte> data) => !Utf8Parser.TryParse(data, out sbyte value, out var bytesConsumed) || bytesConsumed != data.Length ? throw new FormatException() : value;
+
+	protected override short XGetInt16(ReadOnlySpan<byte> data) => ParseInt16(data);
+
+	protected override int XGetInt32(ReadOnlySpan<byte> data) => ParseInt32(data);
+
+	protected override long XGetInt64(ReadOnlySpan<byte> data) => ParseInt64(data);
 
 	private static short ParseInt16(ReadOnlySpan<byte> data) =>
 		!Utf8Parser.TryParse(data, out short value, out var bytesConsumed) || bytesConsumed != data.Length ? throw new FormatException() : value;

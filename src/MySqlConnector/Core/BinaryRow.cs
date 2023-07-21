@@ -157,6 +157,14 @@ internal sealed class BinaryRow : Row
 		}
 	}
 
+	protected override sbyte XGetSByte(ReadOnlySpan<byte> data) => MemoryMarshal.Read<sbyte>(data);
+
+	protected override short XGetInt16(ReadOnlySpan<byte> data) => MemoryMarshal.Read<short>(data);
+
+	protected override int XGetInt32(ReadOnlySpan<byte> data) => MemoryMarshal.Read<int>(data);
+
+	protected override long XGetInt64(ReadOnlySpan<byte> data) => MemoryMarshal.Read<long>(data);
+
 	private object ReadDateTime(ReadOnlySpan<byte> value)
 	{
 		if (value.Length == 0)
